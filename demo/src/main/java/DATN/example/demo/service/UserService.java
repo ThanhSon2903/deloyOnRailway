@@ -38,13 +38,15 @@ public class UserService {
     JwtUtils jwtUtils;
 
     public String register(RegisterRequest registerRequest){
+        // Đã có tài khoản chính thức
         boolean existedEmail = userRepository.existsByEmail(registerRequest.getEmail());
         if(existedEmail){
             throw new RuntimeException("Người dùng đã tồn tại ");
         }
         boolean existedPendingUser = pendingUserRepository.existsByEmail(registerRequest.getEmail());
+        // Kiểm tra email đang chờ xác thực
         if(existedPendingUser){
-            throw new RuntimeException("Vui lòng xác thực OTP để đăng nhập");
+            return resentOTP(registerRequest.getEmail());
         }
         String otp = String.valueOf(new Random().nextInt(900000) + 100000);
         PendingUser pendingUser = new PendingUser();
