@@ -18,7 +18,6 @@ public class WebsocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry){
         registry.addEndpoint("/ws")
-                .setAllowedOriginPatterns("*")
                 .setAllowedOrigins("https://deloy-on-vercel.vercel.app")
                 .withSockJS(); // Endpoint kết nối là /ws
     }

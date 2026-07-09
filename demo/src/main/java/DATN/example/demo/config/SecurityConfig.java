@@ -44,7 +44,7 @@ public class SecurityConfig {
     private static final String[] PUBLIC_ENDPOINT = {
             "/users/register","/users/login","/users/change/password","/users/verify-otp",
             "/users/resent-otp/**","/users/get/me","/ai/config",
-            "/auth/refresh-token"
+            "/auth/refresh-token","/ws/**"
     };
 
     private static final String[] ADMIN_ENDPOINT = {
