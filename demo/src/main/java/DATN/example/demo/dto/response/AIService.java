@@ -1,35 +1,34 @@
 package DATN.example.demo.dto.response;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 
 @Service
 public class AIService {
 
-    private Process process;
+    private final RestTemplate restTemplate = new RestTemplate();
+    private final String AI_URL = "https://circling-tradition-twitch.ngrok-free.dev";
 
     public void startAI(){
-        System.out.println("===== START AI =====");
-        if(process != null && process.isAlive()){
-            return;
-        }
-        try{
-            ProcessBuilder pb = new ProcessBuilder(
-                    "python",
-                    "C:\\Users\\Admin\\Documents\\OpenCV\\posture_monitor.py"
-            );
-            pb.inheritIO();
-            process = pb.start();
-        } catch (IOException e) {
-            throw new RuntimeException("Không thể khởi động AI", e);
-        }
+
+        restTemplate.postForObject(
+                AI_URL + "/start",
+                null,
+                String.class
+        );
+
     }
 
+
     public void stopAI(){
-        if(process != null && process.isAlive()){
-            process.destroyForcibly();
-            process = null;
-        }
+
+        restTemplate.postForObject(
+                AI_URL + "/stop",
+                null,
+                String.class
+        );
+
     }
 }
