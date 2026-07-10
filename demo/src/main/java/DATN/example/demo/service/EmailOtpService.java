@@ -18,19 +18,18 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class EmailOtpService {
 
     @Value("${brevo.api-key}")
-    String apiKey;
+    private String apiKey;
 
     @Value("${brevo.sender-email}")
-    String senderEmail;
+    private String senderEmail;
 
     @Value("${brevo.sender-name}")
-    String senderName;
+    private String senderName;
 
-    RestTemplate restTemplate = new RestTemplate();
+    private RestTemplate restTemplate = new RestTemplate();
 
     public void sentOtpEmail(String toEmail,String otp){
         HttpHeaders headers = new HttpHeaders();
