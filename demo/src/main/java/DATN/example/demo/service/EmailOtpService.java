@@ -59,6 +59,7 @@ public class EmailOtpService {
             System.out.println(response.getBody());
 
         } catch (HttpClientErrorException e) {
+            System.out.println("API KEY = " + apiKey);
             System.out.println("Status: " + e.getStatusCode());
             System.out.println("Body: " + e.getResponseBodyAsString());
             throw e;
