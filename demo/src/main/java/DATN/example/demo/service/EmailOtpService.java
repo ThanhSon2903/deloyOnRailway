@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -49,11 +50,18 @@ public class EmailOtpService {
         );
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
+        try {
+            ResponseEntity<String> response = restTemplate.postForEntity(
+                    "https://api.brevo.com/v3/smtp/email",
+                    entity,
+                    String.class
+            );
+            System.out.println(response.getBody());
 
-        ResponseEntity<String> response = restTemplate.postForEntity(
-                "https://api.brevo.com/v3/smtp/email",
-                entity,
-                String.class
-        );
+        } catch (HttpClientErrorException e) {
+            System.out.println("Status: " + e.getStatusCode());
+            System.out.println("Body: " + e.getResponseBodyAsString());
+            throw e;
+        }
     }
 }
