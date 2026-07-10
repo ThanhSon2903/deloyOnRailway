@@ -4,36 +4,57 @@ package DATN.example.demo.service;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
+import java.util.Map;
+
 
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class EmailOtpService {
-    JavaMailSender javaMailSender;
+
+    @Value("${brevo.api-key}")
+    String apiKey;
+
+    @Value("${brevo.sender-email}")
+    String senderEmail;
+
+    @Value("${brevo.sender-name}")
+    String senderName;
+
+    RestTemplate restTemplate = new RestTemplate();
 
     public void sentOtpEmail(String toEmail,String otp){
-//        try{
-//            SimpleMailMessage message = new SimpleMailMessage();
-//            message.setTo(toEmail);
-//            message.setSubject("Vui lòng xác thực tài khoản của bạn, mã OTP có hiệu lực 1 phút");
-//            message.setText("Mã OTP của bạn là: " + otp);
-//            javaMailSender.send(message);
-//        }
-//        catch (RuntimeException e) {
-//            throw new RuntimeException(e);
-//        }
-        System.out.println("1. Chuẩn bị gửi mail");
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("api-key",apiKey);
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(toEmail);
-        message.setSubject("Vui lòng xác thực tài khoản");
-        message.setText("OTP: " + otp);
+        Map<String, Object> body = Map.of(
+                "sender", Map.of(
+                        "name", senderName,
+                        "email", senderEmail
+                ),
+                "to", List.of(
+                        Map.of("email", toEmail)
+                ),
+                "subject", "Vui lòng xác thực tài khoản của bạn",
+                "textContent", "Mã OTP của bạn là: " + otp
+        );
 
-        System.out.println("2. Trước send()");
-        javaMailSender.send(message);
-        System.out.println("3. Sau send()");
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
+
+        ResponseEntity<String> response = restTemplate.postForEntity(
+                "https://api.brevo.com/v3/smtp/email",
+                entity,
+                String.class
+        );
     }
 }

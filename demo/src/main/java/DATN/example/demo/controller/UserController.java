@@ -44,14 +44,6 @@ public class UserController {
                 .build();
     }
 
-    @PostMapping("/resent-otp/{email}")
-    public ApiResponse<String> resentOtp(@PathVariable String email){
-        return ApiResponse.<String>builder()
-                .code(200)
-                .message("Vui lòng xác thực OTP")
-                .data(userService.resentOTP(email))
-                .build();
-    }
     @PostMapping("/verify-otp")
     public ApiResponse<String> verifyOtp(@RequestBody VerifyOtpRequest verifyOtpRequest){
         return ApiResponse.<String>builder()
