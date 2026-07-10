@@ -20,7 +20,7 @@ import java.util.function.Function;
 
 @Component
 public class JwtUtils {
-    private static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 15;//Thời hạn sống của access_token là 15 phút
+    private static final long ACCESS_TOKEN_EXPIRATION = 1000L * 60 * 60 * 2;//Thời hạn sống của access_token là 15 phút
     private static final long REFRESH_TOKEN_EXPIRATION = 1000L * 60 * 60 * 24 * 7;//Thời hạn sống của refresh_token 7 ngày
     private final SecretKey secretKey;
 
